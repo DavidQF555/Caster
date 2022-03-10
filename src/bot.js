@@ -17,7 +17,7 @@ for (const file of files) {
 }
 try {
 	rest.put(
-		Routes.applicationGuildCommands(process.env.CLIENT_ID, 545199185784471554n),
+		Routes.applicationCommands(process.env.CLIENT_ID),
 		{ body: files.map(file => file.command.data.toJSON()) },
 	);
 	console.log('Successfully registered application commands.');
