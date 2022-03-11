@@ -52,8 +52,8 @@ client.on('voiceStateUpdate', async (oldState, newState) => {
 	const scheduler = new Scheduler(text,
 		joinVoiceChannel({
 			channelId: newState.channelId,
-			guildId: newState.guildId,
-			adapterCreator: newState.channel.guild.voiceAdapterCreator,
+			guildId: newState.guild.id,
+			adapterCreator: newState.guild.voiceAdapterCreator,
 		}),
 	);
 	schedulers[newState.guildId] = scheduler;

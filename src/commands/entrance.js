@@ -32,7 +32,7 @@ module.exports.command = {
 		const text = interaction.options.getString('text', true);
 		const user = interaction.options.getUser('user', true);
 		entrances[user.id] = text;
-		await interaction.reply(createSimpleSuccess('Set ' + user.username + ' entrance text to ' + text));
+		await interaction.reply(createSimpleSuccess(`Set ${user.username} entrance text to ${text}`));
 	},
 };
 
@@ -82,7 +82,7 @@ module.exports.Scheduler = class Scheduler {
 				this.player.play(audio);
 			}
 		});
-		this.player.on('error', error => console.log(error));
+		this.player.on('error', console.warn);
 		this.connection.subscribe(this.player);
 	}
 
