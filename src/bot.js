@@ -41,22 +41,26 @@ client.on('interactionCreate', async (interaction) => {
 
 client.on('voiceStateUpdate', async (oldState, newState) => {
 	if(!newState.channel) return;
-	const text = entrances[newState.id];
-	if(!text) return;
+	const entrance = entrances[newState.id];
+	if(!entrance) return;
+	const old = schedulers[newState.guild.id];
+	if(old) {
+		old.end();
+	}
 	const connection = joinVoiceChannel({
 		channelId: newState.channelId,
 		guildId: newState.channel.guild.id,
 		adapterCreator: newState.channel.guild.voiceAdapterCreator,
 	});
 	connection.on('error', console.warn);
-	const scheduler = new Scheduler(text,
+	const scheduler = new Scheduler(newState.channel.guild.id, entrance,
 		joinVoiceChannel({
 			channelId: newState.channelId,
 			guildId: newState.guild.id,
 			adapterCreator: newState.guild.voiceAdapterCreator,
 		}),
 	);
-	schedulers[newState.guildId] = scheduler;
+	schedulers[newState.guild.id] = scheduler;
 	try {
 		await entersState(connection, VoiceConnectionStatus.Ready, 20e3);
 	}
@@ -64,6 +68,7 @@ client.on('voiceStateUpdate', async (oldState, newState) => {
 		console.warn(error);
 		return;
 	}
+	scheduler.start();
 });
 
 client.once('ready', () => {
