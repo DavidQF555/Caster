@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { entrances, schedulers } = require('../storage.js');
 const { createSimpleSuccess } = require('../util.js');
-const { existsSync, mkdirSync, unlinkSync } = require('fs');
+const { readFileSync, writeFileSync, existsSync, mkdirSync, unlinkSync } = require('fs');
+const { schedulers } = require('../reference.js');
 const {
 	AudioPlayerStatus,
 	createAudioPlayer,
@@ -40,11 +40,16 @@ module.exports.command = {
 		const user = interaction.options.getUser('user', true);
 		const speed = interaction.options.getNumber('speed') || 1;
 		const volume = interaction.options.getNumber('volume') || 1;
-		entrances[user.id] = {
+		const storage = JSON.parse(readFileSync('./storage.json'));
+		if(!storage[interaction.guildId]) {
+			storage[interaction.guildId] = {};
+		}
+		storage[interaction.guildId][user.id] = {
 			text: text,
 			speed: speed,
 			volume: volume,
 		};
+		writeFileSync('./storage.json', JSON.stringify(storage));
 		await interaction.reply(createSimpleSuccess(`Set **${user.username}** entrance text to \`${text}\``));
 	},
 };
@@ -71,7 +76,7 @@ module.exports.Scheduler = class Scheduler {
 					await entersState(this.connection, VoiceConnectionStatus.Ready, 20e3);
 				}
 				catch {
-					if (this.connection.state.status !== VoiceConnectionStatus.Destroyed) this.end();
+					this.end();
 				}
 				finally {
 					this.readyLock = false;
@@ -88,7 +93,7 @@ module.exports.Scheduler = class Scheduler {
 	}
 
 	end() {
-		this.connection.destroy();
+		if (this.connection.state.status !== VoiceConnectionStatus.Destroyed) this.connection.destroy();
 		const path = `./temp/${this.guildId}.wav`;
 		if(existsSync(path)) {
 			unlinkSync(path);
@@ -102,7 +107,7 @@ module.exports.Scheduler = class Scheduler {
 			mkdirSync(path);
 		}
 		const file = this.guildId + '.wav';
-		say.export(this.text, this.guildId, this.speed, path + '/' + file, console.warn);
+		say.export(this.text, null, this.speed, path + '/' + file, console.warn);
 		// temp fix for audio file not exported when creating resource
 		return new Promise(resolve => setTimeout(resolve, 1000))
 			.then(() => {

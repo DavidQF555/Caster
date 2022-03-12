@@ -2,14 +2,14 @@ require('dotenv').config();
 const { REST } = require('@discordjs/rest');
 const { joinVoiceChannel, entersState, VoiceConnectionStatus } = require('@discordjs/voice');
 const { Client, Collection, Intents } = require('discord.js');
-const { readdirSync } = require('fs');
+const { readdirSync, readFileSync } = require('fs');
 const { Routes } = require('discord-api-types/v9');
-const { entrances, schedulers } = require('./storage');
 const { Scheduler } = require('./commands/entrance');
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_VOICE_STATES] });
 const commands = new Collection();
 const rest = new REST({ version: '9' }).setToken(process.env.TOKEN);
+module.exports.schedulers = {};
 
 const files = readdirSync('./src/commands').filter(file => file.endsWith('.js')).map(file => require(`./commands/${file}`));
 for (const file of files) {
@@ -41,9 +41,11 @@ client.on('interactionCreate', async (interaction) => {
 
 client.on('voiceStateUpdate', async (oldState, newState) => {
 	if(!newState.channel) return;
-	const entrance = entrances[newState.id];
+	const storage = JSON.parse(readFileSync('./storage.json'));
+	if(!storage[newState.channel.guild.id]) return;
+	const entrance = storage[newState.channel.guild.id][newState.id];
 	if(!entrance) return;
-	const old = schedulers[newState.guild.id];
+	const old = module.exports.schedulers[newState.guild.id];
 	if(old) {
 		old.end();
 	}
@@ -60,7 +62,7 @@ client.on('voiceStateUpdate', async (oldState, newState) => {
 			adapterCreator: newState.guild.voiceAdapterCreator,
 		}),
 	);
-	schedulers[newState.guild.id] = scheduler;
+	module.exports.schedulers[newState.guild.id] = scheduler;
 	try {
 		await entersState(connection, VoiceConnectionStatus.Ready, 20e3);
 	}
