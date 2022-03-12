@@ -40,7 +40,10 @@ module.exports.command = {
 		const user = interaction.options.getUser('user', true);
 		const speed = interaction.options.getNumber('speed') || 1;
 		const volume = interaction.options.getNumber('volume') || 1;
-		const storage = JSON.parse(readFileSync('./storage.json'));
+		let storage = {};
+		if(existsSync('./storage.json')) {
+			storage = JSON.parse(readFileSync('./storage.json'));
+		}
 		if(!storage[interaction.guildId]) {
 			storage[interaction.guildId] = {};
 		}

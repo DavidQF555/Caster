@@ -2,7 +2,7 @@ require('dotenv').config();
 const { REST } = require('@discordjs/rest');
 const { joinVoiceChannel, entersState, VoiceConnectionStatus } = require('@discordjs/voice');
 const { Client, Collection, Intents } = require('discord.js');
-const { readdirSync, readFileSync } = require('fs');
+const { readdirSync, readFileSync, existsSync } = require('fs');
 const { Routes } = require('discord-api-types/v9');
 const { Scheduler } = require('./commands/entrance');
 
@@ -40,7 +40,7 @@ client.on('interactionCreate', async (interaction) => {
 });
 
 client.on('voiceStateUpdate', async (oldState, newState) => {
-	if(!newState.channel) return;
+	if(!newState.channel || !existsSync('./storage.json')) return;
 	const storage = JSON.parse(readFileSync('./storage.json'));
 	if(!storage[newState.channel.guild.id]) return;
 	const entrance = storage[newState.channel.guild.id][newState.id];
