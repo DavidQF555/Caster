@@ -6,12 +6,9 @@ const {
 	AudioPlayerStatus,
 	createAudioPlayer,
 	entersState,
-	VoiceConnectionDisconnectReason,
 	VoiceConnectionStatus,
 	createAudioResource,
 } = require('@discordjs/voice');
-const { promisify } = require('util');
-const wait = promisify(setTimeout);
 const say = require('say');
 
 module.exports.command = {
@@ -62,22 +59,8 @@ module.exports.Scheduler = class Scheduler {
 		this.volume = entrance.volume;
 		this.player = createAudioPlayer();
 		this.connection.on('stateChange', async (oldState, newState) => {
-			if (newState.status === VoiceConnectionStatus.Disconnected) {
-				if (newState.reason === VoiceConnectionDisconnectReason.WebSocketClose && newState.closeCode === 4014) {
-					try {
-						await entersState(this.connection, VoiceConnectionStatus.Connecting, 5e3);
-					}
-					catch {
-						this.end();
-					}
-				}
-				else if (this.connection.rejoinAttempts < 5) {
-					await wait((this.connection.rejoinAttempts + 1) * 5e3);
-					this.connection.rejoin();
-				}
-				else {
-					this.end();
-				}
+			if(newState.status === VoiceConnectionStatus.Disconnected) {
+				this.stop();
 			}
 			else if (newState.status === VoiceConnectionStatus.Destroyed) {
 				this.player.stop(true);
