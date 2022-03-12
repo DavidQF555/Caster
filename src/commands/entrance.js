@@ -45,7 +45,7 @@ module.exports.command = {
 			speed: speed,
 			volume: volume,
 		};
-		await interaction.reply(createSimpleSuccess(`Set ${user.username} entrance text to ${text}`));
+		await interaction.reply(createSimpleSuccess(`Set **${user.username}** entrance text to \`${text}\``));
 	},
 };
 
