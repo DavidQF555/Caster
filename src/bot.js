@@ -68,7 +68,7 @@ client.on('voiceStateUpdate', async (oldState, newState) => {
 		console.warn(error);
 		return;
 	}
-	scheduler.start();
+	await scheduler.start();
 });
 
 client.once('ready', () => {

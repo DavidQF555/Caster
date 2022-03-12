@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { entrances, schedulers } = require('../storage.js');
 const { createSimpleSuccess } = require('../util.js');
-const { existsSync, mkdirSync } = require('fs');
+const { existsSync, mkdirSync, unlinkSync } = require('fs');
 const {
 	AudioPlayerStatus,
 	createAudioPlayer,
@@ -89,19 +89,27 @@ module.exports.Scheduler = class Scheduler {
 
 	end() {
 		this.connection.destroy();
+		const path = `./temp/${this.guildId}.wav`;
+		if(existsSync(path)) {
+			unlinkSync(path);
+		}
 		schedulers[this.guildId] = null;
 	}
 
-	start() {
+	async start() {
 		const path = './temp';
 		if(!existsSync(path)) {
 			mkdirSync(path);
 		}
 		const file = this.guildId + '.wav';
-		say.export(this.text, null, this.speed, path + '/' + file, console.warn);
-		const resource = createAudioResource(path + '/' + file, { inlineVolume: true });
-		resource.volume.setVolume(this.volume);
-		this.player.play(resource);
+		say.export(this.text, this.guildId, this.speed, path + '/' + file, console.warn);
+		// temp fix for audio file not exported when creating resource
+		return new Promise(resolve => setTimeout(resolve, 1000))
+			.then(() => {
+				const resource = createAudioResource(path + '/' + file, { inlineVolume: true });
+				resource.volume.setVolume(this.volume);
+				this.player.play(resource);
+			});
 	}
 
 };
