@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { createSimpleSuccess } = require('../util.js');
+const { Permissions } = require('discord.js');
+const { createSimpleSuccess, createSimpleFailure } = require('../util.js');
 const { readFileSync, writeFileSync, existsSync, mkdirSync, unlinkSync } = require('fs');
 const { schedulers } = require('../reference.js');
 const {
@@ -36,8 +37,12 @@ module.exports.command = {
 				.setRequired(false),
 		),
 	async execute(interaction) {
-		const text = interaction.options.getString('text', true);
+		if(!interaction.memberPermissions.has(Permissions.MANAGE_NICKNAMES)) {
+			await interaction.reply(createSimpleFailure('You do not have permission'));
+			return;
+		}
 		const user = interaction.options.getUser('user', true);
+		const text = interaction.options.getString('text', true);
 		const speed = interaction.options.getNumber('speed') || 1;
 		const volume = interaction.options.getNumber('volume') || 1;
 		let storage = {};
