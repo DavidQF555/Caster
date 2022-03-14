@@ -40,7 +40,7 @@ client.on('interactionCreate', async (interaction) => {
 });
 
 client.on('voiceStateUpdate', async (oldState, newState) => {
-	if(oldState.channel || !newState.channel || !existsSync('./storage.json')) return;
+	if(!newState.channel || newState.channel == oldState.channel || !existsSync('./storage.json')) return;
 	const storage = JSON.parse(readFileSync('./storage.json'));
 	if(!storage[newState.channel.guild.id]) return;
 	const entrance = storage[newState.channel.guild.id][newState.id];
