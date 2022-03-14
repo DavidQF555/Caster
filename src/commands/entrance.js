@@ -77,6 +77,10 @@ module.exports.Scheduler = class Scheduler {
 			}
 			else if (newState.status === VoiceConnectionStatus.Destroyed) {
 				this.player.stop(true);
+				const path = `./temp/${this.guildId}.wav`;
+				if(existsSync(path)) {
+					unlinkSync(path);
+				}
 			}
 			else if (!this.readyLock && (newState.status === VoiceConnectionStatus.Connecting || newState.status === VoiceConnectionStatus.Signalling)) {
 				this.readyLock = true;
@@ -102,10 +106,6 @@ module.exports.Scheduler = class Scheduler {
 
 	end() {
 		if (this.connection.state.status !== VoiceConnectionStatus.Destroyed) this.connection.destroy();
-		const path = `./temp/${this.guildId}.wav`;
-		if(existsSync(path)) {
-			unlinkSync(path);
-		}
 		schedulers[this.guildId] = null;
 	}
 
