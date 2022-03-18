@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { Permissions } = require('discord.js');
 const { createSimpleSuccess, createSimpleFailure } = require('../util.js');
-const { readFileSync, writeFileSync, existsSync, mkdirSync, unlinkSync } = require('fs');
+const { readFileSync, writeFileSync, existsSync, mkdirSync } = require('fs');
 const { schedulers } = require('../reference.js');
 const {
 	AudioPlayerStatus,
@@ -77,10 +77,6 @@ module.exports.Scheduler = class Scheduler {
 			}
 			else if (newState.status === VoiceConnectionStatus.Destroyed) {
 				this.player.stop(true);
-				const path = `./temp/${this.guildId}.wav`;
-				if(existsSync(path)) {
-					unlinkSync(path);
-				}
 			}
 			else if (!this.readyLock && (newState.status === VoiceConnectionStatus.Connecting || newState.status === VoiceConnectionStatus.Signalling)) {
 				this.readyLock = true;
