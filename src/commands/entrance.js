@@ -113,7 +113,7 @@ module.exports.Scheduler = class Scheduler {
 		const file = this.guildId + '.wav';
 		say.export(this.text, null, this.speed, path + '/' + file, console.warn);
 		// temp fix for audio file not exported when creating resource
-		return new Promise(resolve => setTimeout(resolve, 1000))
+		return new Promise(resolve => setTimeout(resolve, 3000))
 			.then(() => {
 				const resource = createAudioResource(path + '/' + file, { inlineVolume: true });
 				resource.volume.setVolume(this.volume);
