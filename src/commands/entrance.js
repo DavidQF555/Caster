@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { Permissions } = require('discord.js');
+const { PermissionsBitField } = require('discord.js');
 const { createSimpleSuccess, createSimpleFailure } = require('../util.js');
 const { readFileSync, writeFileSync, existsSync, mkdirSync } = require('fs');
 const { schedulers } = require('../reference.js');
@@ -37,7 +37,7 @@ module.exports.command = {
 				.setRequired(false),
 		),
 	async execute(interaction) {
-		if(!interaction.memberPermissions.has(Permissions.MANAGE_NICKNAMES)) {
+		if(!interaction.memberPermissions.has(PermissionsBitField.Flags.ManageNicknames)) {
 			await interaction.reply(createSimpleFailure('You do not have permission'));
 			return;
 		}

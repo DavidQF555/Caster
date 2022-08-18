@@ -1,12 +1,12 @@
 require('dotenv').config();
 const { REST } = require('@discordjs/rest');
 const { joinVoiceChannel, entersState, VoiceConnectionStatus } = require('@discordjs/voice');
-const { Client, Collection, Intents } = require('discord.js');
+const { Client, Collection, IntentsBitField } = require('discord.js');
 const { readdirSync, readFileSync, existsSync } = require('fs');
 const { Routes } = require('discord-api-types/v9');
 const { Scheduler } = require('./commands/entrance');
 
-const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_VOICE_STATES] });
+const client = new Client({ intents: [IntentsBitField.Flags.Guilds, IntentsBitField.Flags.GuildVoiceStates] });
 const commands = new Collection();
 const rest = new REST({ version: '9' }).setToken(process.env.TOKEN);
 module.exports.schedulers = {};
@@ -35,7 +35,7 @@ client.on('interactionCreate', async (interaction) => {
 	}
 	catch (error) {
 		console.error(error);
-		await interaction.followUp({ content: 'There was an error while executing this command!', ephemeral: true });
+		await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
 	}
 });
 
