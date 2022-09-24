@@ -1,6 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { PermissionsBitField } = require('discord.js');
-const { createSimpleSuccess, createSimpleFailure } = require('../util.js');
+const { createSimpleSuccess } = require('../util.js');
 const { readFileSync, writeFileSync, existsSync, mkdirSync } = require('fs');
 const { schedulers } = require('../reference.js');
 const {
@@ -37,10 +36,6 @@ module.exports.command = {
 				.setRequired(false),
 		),
 	async execute(interaction) {
-		if(!interaction.memberPermissions.has(PermissionsBitField.Flags.ManageNicknames)) {
-			await interaction.reply(createSimpleFailure('You do not have permission'));
-			return;
-		}
 		const user = interaction.options.getUser('user', true);
 		const text = interaction.options.getString('text', true);
 		const speed = interaction.options.getNumber('speed') || 1;
