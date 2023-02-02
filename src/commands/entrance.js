@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { createSimpleSuccess } = require('../util.js');
+const { createSimpleSuccess, createSimpleFailure } = require('../util.js');
 const { readFileSync, writeFileSync, existsSync, mkdirSync } = require('fs');
 const { schedulers } = require('../reference.js');
 const {
@@ -37,6 +37,10 @@ module.exports.command = {
 		),
 	async execute(interaction) {
 		const user = interaction.options.getUser('user', true);
+		if(user.bot) {
+			await interaction.reply(createSimpleFailure('Cannot set a bot\'s entrance text'));
+			return;
+		}
 		const text = interaction.options.getString('text', true);
 		const speed = interaction.options.getNumber('speed') || 1;
 		const volume = interaction.options.getNumber('volume') || 1;
