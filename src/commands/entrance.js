@@ -9,7 +9,8 @@ const {
 	VoiceConnectionStatus,
 	createAudioResource,
 } = require('@discordjs/voice');
-const say = require('say');
+const lang = JSON.parse(readFileSync('./lang.json'));
+const tts = require('google-tts-api');
 
 module.exports.command = {
 	data: new SlashCommandBuilder()
@@ -25,9 +26,9 @@ module.exports.command = {
 				.setDescription('Text on entrance')
 				.setRequired(true),
 		)
-		.addNumberOption(builder =>
-			builder.setName('speed')
-				.setDescription('Speed factor')
+		.addStringOption(builder =>
+			builder.setName('lang')
+				.setDescription('Language of text')
 				.setRequired(false),
 		)
 		.addNumberOption(builder =>
@@ -42,8 +43,11 @@ module.exports.command = {
 			return;
 		}
 		const text = interaction.options.getString('text', true);
-		const speed = interaction.options.getNumber('speed') || 1;
 		const volume = interaction.options.getNumber('volume') || 1;
+		let language = interaction.options.getString('lang');
+		if(!lang || !Object.keys(lang).includes(language)) {
+			language = 'en';
+		}
 		let storage = {};
 		if(existsSync('./storage.json')) {
 			storage = JSON.parse(readFileSync('./storage.json'));
@@ -53,11 +57,11 @@ module.exports.command = {
 		}
 		storage[interaction.guildId][user.id] = {
 			text: text,
-			speed: speed,
 			volume: volume,
+			lang: language,
 		};
 		writeFileSync('./storage.json', JSON.stringify(storage));
-		await interaction.reply(createSimpleSuccess(`Set **${user.username}** entrance text to \`${text}\``));
+		await interaction.reply(createSimpleSuccess(`Set **${user.username}** entrance text to \`${text}\` in **${lang[language]}**`));
 	},
 };
 
@@ -66,9 +70,9 @@ module.exports.Scheduler = class Scheduler {
 	constructor(guildId, entrance, connection) {
 		this.guildId = guildId;
 		this.text = entrance.text;
-		this.connection = connection;
-		this.speed = entrance.speed;
+		this.lang = entrance.lang;
 		this.volume = entrance.volume;
+		this.connection = connection;
 		this.player = createAudioPlayer();
 		this.connection.on('stateChange', async (oldState, newState) => {
 			if(newState.status === VoiceConnectionStatus.Disconnected) {
@@ -109,15 +113,17 @@ module.exports.Scheduler = class Scheduler {
 		if(!existsSync(path)) {
 			mkdirSync(path);
 		}
-		const file = this.guildId + '.wav';
-		say.export(this.text, null, this.speed, path + '/' + file, console.warn);
-		// temp fix for audio file not exported when creating resource
-		return new Promise(resolve => setTimeout(resolve, 3000))
-			.then(() => {
-				const resource = createAudioResource(path + '/' + file, { inlineVolume: true });
-				resource.volume.setVolume(this.volume);
-				this.player.play(resource);
-			});
+		const file = path + '/' + this.guildId + '.wav';
+		const audio = (await tts.getAllAudioBase64(this.text,
+			{
+				lang: this.lang,
+				timeout: 10000,
+			})
+			.catch(console.error));
+		const buffer = Buffer.concat(audio.map(clip => Buffer.from(clip.base64, 'base64')));
+		writeFileSync(file, buffer);
+		const resource = createAudioResource(file, { inlineVolume: true });
+		resource.volume.setVolume(this.volume);
+		this.player.play(resource);
 	}
-
 };

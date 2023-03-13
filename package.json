@@ -27,8 +27,8 @@
         "discord.js": "^14.8.0",
         "dotenv": "^16.0.3",
         "ffmpeg-static": "^5.1.0",
-        "libsodium-wrappers": "^0.7.11",
-        "say": "^0.16.0"
+        "google-tts-api": "^2.0.2",
+        "libsodium-wrappers": "^0.7.11"
     },
     "devDependencies": {
         "eslint": "^8.36.0",
