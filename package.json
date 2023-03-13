@@ -19,19 +19,19 @@
     },
     "homepage": "https://github.com/DavidQF555/Caster",
     "dependencies": {
-        "@discordjs/builders": "^1.4.0",
+        "@discordjs/builders": "^1.5.0",
         "@discordjs/opus": "^0.9.0",
-        "@discordjs/rest": "^1.5.0",
-        "@discordjs/voice": "^0.14.0",
-        "discord-api-types": "^0.37.31",
-        "discord.js": "^14.7.1",
+        "@discordjs/rest": "^1.6.0",
+        "@discordjs/voice": "^0.15.0",
+        "discord-api-types": "^0.37.35",
+        "discord.js": "^14.8.0",
         "dotenv": "^16.0.3",
         "ffmpeg-static": "^5.1.0",
-        "libsodium-wrappers": "^0.7.10",
+        "libsodium-wrappers": "^0.7.11",
         "say": "^0.16.0"
     },
     "devDependencies": {
-        "eslint": "^8.33.0",
-        "npm-check-updates": "^16.6.3"
+        "eslint": "^8.36.0",
+        "npm-check-updates": "^16.7.12"
     }
 }
