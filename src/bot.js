@@ -5,11 +5,11 @@ const { Client, Collection, IntentsBitField } = require('discord.js');
 const { readdirSync, readFileSync, existsSync } = require('fs');
 const { Routes } = require('discord-api-types/v9');
 const { Scheduler } = require('./commands/entrance');
+const { schedulers } = require('./reference.js');
 
 const client = new Client({ intents: [IntentsBitField.Flags.Guilds, IntentsBitField.Flags.GuildVoiceStates] });
 const commands = new Collection();
 const rest = new REST({ version: '9' }).setToken(process.env.TOKEN);
-module.exports.schedulers = {};
 
 const files = readdirSync('./src/commands').filter(file => file.endsWith('.js')).map(file => require(`./commands/${file}`));
 for (const file of files) {
@@ -45,7 +45,7 @@ client.on('voiceStateUpdate', async (oldState, newState) => {
 	if(!storage[newState.channel.guild.id]) return;
 	const entrance = storage[newState.channel.guild.id][newState.id];
 	if(!entrance) return;
-	const old = module.exports.schedulers[newState.guild.id];
+	const old = schedulers[newState.guild.id];
 	if(old) {
 		old.end();
 	}
@@ -62,7 +62,7 @@ client.on('voiceStateUpdate', async (oldState, newState) => {
 			adapterCreator: newState.guild.voiceAdapterCreator,
 		}),
 	);
-	module.exports.schedulers[newState.guild.id] = scheduler;
+	schedulers[newState.guild.id] = scheduler;
 	try {
 		await entersState(connection, VoiceConnectionStatus.Ready, 20e3);
 	}
