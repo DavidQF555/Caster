@@ -23,3 +23,4 @@ This a Discord bot created using [Node.js](https://nodejs.org/) and the [Discord
 | Name | Description |
 | - | - |
 | entrance | Sets the entrance speech for a user |
+| lang | Displays all language options for entrance |

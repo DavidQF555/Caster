@@ -28,7 +28,7 @@ module.exports.command = {
 		)
 		.addStringOption(builder =>
 			builder.setName('lang')
-				.setDescription('Language of text')
+				.setDescription('Language of text (options in /lang)')
 				.setRequired(false),
 		)
 		.addNumberOption(builder =>
