@@ -32,7 +32,7 @@ module.exports.command = {
 		)
 		.addSubcommand(b =>
 			b.setName('youtube')
-				.setDescription('Adds youtube clip')
+				.setDescription('Adds youtube video')
 				.addUserOption(builder =>
 					builder.setName('user')
 						.setDescription('Target user')
@@ -41,18 +41,6 @@ module.exports.command = {
 				.addStringOption(builder =>
 					builder.setName('url')
 						.setDescription('Text on entrance')
-						.setRequired(true),
-				)
-				.addNumberOption(builder =>
-					builder.setName('start')
-						.setMinValue(0)
-						.setDescription('Start time in seconds')
-						.setRequired(true),
-				)
-				.addNumberOption(builder =>
-					builder.setName('end')
-						.setMinValue(0)
-						.setDescription('End time in seconds')
 						.setRequired(true),
 				),
 		),

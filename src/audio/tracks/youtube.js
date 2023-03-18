@@ -4,19 +4,17 @@ const getYoutubeID = require('get-youtube-id');
 
 class YoutubeTrack {
 
-	constructor(id, start, end) {
+	constructor(id) {
 		this.id = id;
-		this.start = start;
-		this.end = end;
 	}
 
 	async createAudioResource() {
-		const out = await stream(`https://www.youtu.be/${this.id}?t=${this.start}s&end=${this.end}s`, { discordPlayerCompatibility: true });
+		const out = await stream(`https://www.youtu.be/${this.id}`, { discordPlayerCompatibility: true });
 		return createAudioResource(out.stream, { metadata: this, inputType: out.type });
 	}
 
 	createMessage(user) {
-		return `Set **${user}** entrance text to \`${this.id}\` from **${this.start}** to **${this.end}** seconds`;
+		return `Set **${user}** entrance audio to a [youtube video](https://youtu.be/${this.id})`;
 	}
 
 	serialize() {
@@ -30,16 +28,12 @@ class YoutubeTrack {
 }
 
 module.exports = {
-	create: options => new YoutubeTrack(options.id, options.start, options.end),
+	create: options => new YoutubeTrack(options.id),
 	createFromCommand: options => {
 		const id = getYoutubeID(options.getString('url', true));
-		const start = options.getNumber('start', true);
-		const end = options.getNumber('end', true);
-		if(id && start < end) {
+		if(id) {
 			return module.exports.create({
 				id: id,
-				start: start,
-				end: end,
 			});
 		}
 	},
