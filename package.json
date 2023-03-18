@@ -27,8 +27,10 @@
         "discord.js": "^14.8.0",
         "dotenv": "^16.0.3",
         "ffmpeg-static": "^5.1.0",
+        "get-youtube-id": "^1.0.1",
         "google-tts-api": "^2.0.2",
-        "libsodium-wrappers": "^0.7.11"
+        "libsodium-wrappers": "^0.7.11",
+        "play-dl": "^1.9.6"
     },
     "devDependencies": {
         "eslint": "^8.36.0",
