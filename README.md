@@ -24,3 +24,4 @@ This a Discord bot created using [Node.js](https://nodejs.org/) and the [Discord
 | - | - |
 | entrance | Sets the entrance speech for a user |
 | lang | Displays all language options for entrance |
+| stop | Stops whatever Caster is playing |

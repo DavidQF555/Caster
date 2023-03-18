@@ -13,8 +13,8 @@ class YoutubeTrack {
 		return createAudioResource(out.stream, { metadata: this, inputType: out.type });
 	}
 
-	createMessage(user) {
-		return `Set **${user}** entrance audio to a [youtube video](https://youtu.be/${this.id})`;
+	getName() {
+		return `[youtube video](https://youtu.be/${this.id})`;
 	}
 
 	serialize() {

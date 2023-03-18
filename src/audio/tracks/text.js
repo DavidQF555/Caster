@@ -45,8 +45,8 @@ class TextTrack {
 		};
 	}
 
-	createMessage(user) {
-		return `Set **${user}** entrance text to \`${this.text}\` in **${lang[this.lang]}**`;
+	getName() {
+		return `\`${this.text}\` in **${lang[this.lang]}**`;
 	}
 
 	async createAudioResource() {

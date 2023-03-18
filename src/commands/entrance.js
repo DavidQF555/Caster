@@ -68,7 +68,7 @@ module.exports.command = {
 			storage[interaction.guildId][user.id] = track.serialize();
 			storage[interaction.guildId][user.id].type = subcommand;
 			writeFileSync('./data.json', JSON.stringify(storage));
-			await interaction.reply(createSimpleSuccess(track.createMessage(user.username)));
+			await interaction.reply(createSimpleSuccess(`Set entrance audio for **${user.username}** to ${track.getName()}`));
 		}
 	},
 };
