@@ -24,7 +24,7 @@ module.exports = {
 		return module.exports.create({
 			text: text,
 			volume: volume,
-			lang: lang,
+			lang: language,
 		});
 	},
 };
