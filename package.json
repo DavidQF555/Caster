@@ -1,6 +1,6 @@
 {
     "name": "caster",
-    "version": "2.1.0",
+    "version": "2.1.1",
     "main": "bot.js",
     "scripts": {
         "start": "node src/bot.js"

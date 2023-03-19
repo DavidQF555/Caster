@@ -11,7 +11,7 @@ class YoutubeTrack {
 
 	async createAudioResource() {
 		const out = await stream(`https://www.youtu.be/${this.id}`, { discordPlayerCompatibility: true });
-		const resource = createAudioResource(out.stream, { metadata: this, inputType: out.type });
+		const resource = createAudioResource(out.stream, { metadata: this, inputType: out.type, inlineVolume: true });
 		resource.volume.setVolume(this.volume);
 		return resource;
 	}
