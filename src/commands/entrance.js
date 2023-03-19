@@ -42,6 +42,11 @@ module.exports.command = {
 					builder.setName('url')
 						.setDescription('Text on entrance')
 						.setRequired(true),
+				)
+				.addNumberOption(builder =>
+					builder.setName('volume')
+						.setDescription('Volume factor')
+						.setRequired(false),
 				),
 		),
 	async execute(interaction) {

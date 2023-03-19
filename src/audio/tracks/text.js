@@ -7,20 +7,14 @@ const lang = JSON.parse(readFileSync('./lang.json'));
 module.exports = {
 	create: options => {
 		const text = options.text;
-		const volume = options.volume || 1;
-		let language = options.lang;
-		if(!lang || !Object.keys(lang).includes(language)) {
-			language = 'en';
-		}
+		const volume = options.volume;
+		const language = options.lang;
 		return new TextTrack(text, language, volume);
 	},
 	createFromCommand: options => {
 		const text = options.getString('text', true);
-		const volume = options.getNumber('volume') || 1;
-		let language = options.getString('lang');
-		if(!lang || !Object.keys(lang).includes(language)) {
-			language = 'en';
-		}
+		const volume = options.getNumber('volume');
+		const language = options.getString('lang');
 		return module.exports.create({
 			text: text,
 			volume: volume,
@@ -34,7 +28,10 @@ class TextTrack {
 	constructor(text, language, volume) {
 		this.text = text;
 		this.lang = language;
-		this.volume = volume;
+		if(!this.lang || !Object.keys(lang).includes(this.lang)) {
+			this.lang = 'en';
+		}
+		this.volume = volume || 1;
 	}
 
 	serialize() {

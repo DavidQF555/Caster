@@ -5,7 +5,7 @@ const { createSimpleSuccess, createSimpleFailure } = require('../util.js');
 module.exports.command = {
 	data: new SlashCommandBuilder()
 		.setName('stop')
-		.setDescription('Stops whatever casting is playing'),
+		.setDescription('Stops whatever Caster is playing'),
 	async execute(interaction) {
 		const scheduler = schedulers[interaction.guildId];
 		if(!scheduler) {
