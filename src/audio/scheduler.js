@@ -48,7 +48,7 @@ module.exports = class Scheduler {
 	}
 
 	async start() {
-		this.player.play(await this.track.createAudioResource());
+		this.player.play(await this.track.createAudioResource(this.guildId));
 	}
 
 };

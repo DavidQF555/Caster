@@ -46,12 +46,12 @@ class TextTrack {
 		return `\`${this.text}\` in **${lang[this.lang]}**`;
 	}
 
-	async createAudioResource() {
+	async createAudioResource(guildId) {
 		const path = './temp';
 		if(!existsSync(path)) {
 			mkdirSync(path);
 		}
-		const file = path + '/' + this.guildId + '.wav';
+		const file = path + '/' + guildId + '.wav';
 		const audio = await tts.getAllAudioBase64(this.text,
 			{
 				lang: this.lang,
