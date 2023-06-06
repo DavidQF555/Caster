@@ -1,6 +1,7 @@
 const tts = require('google-tts-api');
-const { createAudioResource } = require('@discordjs/voice');
-const { readFileSync, existsSync, mkdirSync, writeFileSync } = require('fs');
+const { createAudioResource, demuxProbe } = require('@discordjs/voice');
+const { Readable } = require('stream');
+const { readFileSync } = require('fs');
 
 const lang = JSON.parse(readFileSync('./lang.json'));
 
@@ -46,21 +47,19 @@ class TextTrack {
 		return `\`${this.text}\` in **${lang[this.lang]}**`;
 	}
 
-	async createAudioResource(guildId) {
-		const path = './temp';
-		if(!existsSync(path)) {
-			mkdirSync(path);
-		}
-		const file = path + '/' + guildId + '.wav';
+	async createAudioResource() {
 		const audio = await tts.getAllAudioBase64(this.text,
 			{
 				lang: this.lang,
 				timeout: 10000,
 			})
 			.catch(console.error);
-		const buffer = Buffer.concat(audio.map(clip => Buffer.from(clip.base64, 'base64')));
-		writeFileSync(file, buffer);
-		const resource = createAudioResource(file, { inlineVolume: true });
+		const stream = new Readable();
+		for(const clip of audio) {
+			stream.push(Buffer.from(clip.base64, 'base64'));
+		}
+		stream.push(null);
+		const resource = await demuxProbe(stream).then(info => createAudioResource(info.stream, { inlineVolume: true, inputType: info.type }));
 		resource.volume.setVolume(this.volume);
 		return resource;
 	}
