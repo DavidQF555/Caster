@@ -1,19 +1,20 @@
 {
     "name": "caster",
     "version": "2.1.4",
-    "main": "bot.js",
+    "main": "src/bot.js",
     "scripts": {
         "start": "node src/bot.js"
     },
     "engines": {
-        "node": "16.x"
+        "node": ">=16.9.0",
+        "npm": ">=7.0.0"
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/DavidQF555/Caster.git"
+        "url": "https://github.com/DavidQF555/Caster.git"
     },
     "author": "DavidQF555",
-    "license": "Apache 2.0",
+    "license": "Apache-2.0",
     "bugs": {
         "url": "https://github.com/DavidQF555/Caster/issues"
     },
