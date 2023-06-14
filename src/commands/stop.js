@@ -12,6 +12,10 @@ export default {
 			await interaction.reply(createSimpleFailure('Not currently playing anything'));
 			return;
 		}
+		if(interaction.member.voice.channelId !== interaction.guild.members.me.voice.channelId) {
+			await interaction.reply(createSimpleFailure('Must be in the same channel'));
+			return;
+		}
 		scheduler.end();
 		await interaction.reply(createSimpleSuccess(`Stopped playing ${scheduler.track.getName()}`));
 	},
