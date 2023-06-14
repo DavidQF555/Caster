@@ -19,6 +19,7 @@ export default class Scheduler {
 			}
 			else if (newState.status === VoiceConnectionStatus.Destroyed) {
 				this.player.stop(true);
+				schedulers[this.guildId] = null;
 			}
 			else if (!this.readyLock && (newState.status === VoiceConnectionStatus.Connecting || newState.status === VoiceConnectionStatus.Signalling)) {
 				this.readyLock = true;
@@ -44,7 +45,6 @@ export default class Scheduler {
 
 	end() {
 		if (this.connection.state.status !== VoiceConnectionStatus.Destroyed) this.connection.destroy();
-		schedulers[this.guildId] = null;
 	}
 
 	async start() {
