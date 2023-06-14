@@ -6,6 +6,7 @@ import { readFileSync, existsSync } from 'fs';
 import { Routes } from 'discord-api-types/v9';
 import Scheduler from './audio/scheduler.js';
 import { schedulers } from './reference.js';
+import { createSimpleFailure } from './util.js';
 import baseCommands from './commands.js';
 import tracks from './audio/tracks.js';
 
@@ -48,7 +49,10 @@ async function handleCommand(interaction) {
 	}
 	catch (error) {
 		console.error(error);
-		await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+		if(!interaction.deferred) {
+			await interaction.deferReply();
+		}
+		await interaction.followUp(createSimpleFailure('There was an error while executing this command!'));
 	}
 }
 
