@@ -1,24 +1,25 @@
-require('dotenv').config();
-const { REST } = require('@discordjs/rest');
-const { joinVoiceChannel, entersState, VoiceConnectionStatus } = require('@discordjs/voice');
-const { Client, Collection, IntentsBitField } = require('discord.js');
-const { readdirSync, readFileSync, existsSync } = require('fs');
-const { Routes } = require('discord-api-types/v9');
-const Scheduler = require('./audio/scheduler');
-const { schedulers } = require('./reference.js');
+import 'dotenv/config';
+import { REST } from '@discordjs/rest';
+import { joinVoiceChannel, entersState, VoiceConnectionStatus } from '@discordjs/voice';
+import { Client, Collection, IntentsBitField } from 'discord.js';
+import { readFileSync, existsSync } from 'fs';
+import { Routes } from 'discord-api-types/v9';
+import Scheduler from './audio/scheduler.js';
+import { schedulers } from './reference.js';
+import baseCommands from './commands.js';
+import tracks from './audio/tracks.js';
 
 const client = new Client({ intents: [IntentsBitField.Flags.Guilds, IntentsBitField.Flags.GuildVoiceStates] });
-const commands = new Collection();
 const rest = new REST({ version: '9' }).setToken(process.env.TOKEN);
 
-const files = readdirSync('./src/commands').filter(file => file.endsWith('.js')).map(file => require(`./commands/${file}`));
-for (const file of files) {
-	commands.set(file.command.data.name, file.command);
+const commands = new Collection();
+for (const command of baseCommands) {
+	commands.set(command.data.name, command);
 }
 try {
-	rest.put(
+	await rest.put(
 		Routes.applicationCommands(process.env.CLIENT_ID),
-		{ body: files.map(file => file.command.data.toJSON()) },
+		{ body: commands.map(command => command.data.toJSON()) },
 	);
 	console.log('Successfully registered application commands.');
 }
@@ -55,7 +56,7 @@ client.on('voiceStateUpdate', async (oldState, newState) => {
 		adapterCreator: newState.channel.guild.voiceAdapterCreator,
 	});
 	connection.on('error', console.warn);
-	const type = require(`./audio/tracks/${entrance.type}.js`);
+	const type = tracks[entrance.type];
 	if(type) {
 		const track = type.create(entrance);
 		const scheduler = new Scheduler(newState.channel.guild.id,

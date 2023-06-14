@@ -1,1 +1,1 @@
-module.exports.schedulers = {};
+export const schedulers = {};

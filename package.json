@@ -15,6 +15,7 @@
     },
     "author": "DavidQF555",
     "license": "Apache-2.0",
+    "type": "module",
     "bugs": {
         "url": "https://github.com/DavidQF555/Caster/issues"
     },

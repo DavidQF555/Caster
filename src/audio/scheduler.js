@@ -1,12 +1,12 @@
-const {
+import {
 	AudioPlayerStatus,
 	createAudioPlayer,
 	entersState,
 	VoiceConnectionStatus,
-} = require('@discordjs/voice');
-const { schedulers } = require('../reference.js');
+} from '@discordjs/voice';
+import { schedulers } from '../reference.js';
 
-module.exports = class Scheduler {
+export default class Scheduler {
 
 	constructor(guildId, connection, track) {
 		this.guildId = guildId;
@@ -51,4 +51,4 @@ module.exports = class Scheduler {
 		this.player.play(await this.track.createAudioResource());
 	}
 
-};
+}

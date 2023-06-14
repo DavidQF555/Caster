@@ -1,11 +1,11 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
-const { readFileSync } = require('fs');
-const { createSimpleSuccess } = require('../util.js');
+import { SlashCommandBuilder } from '@discordjs/builders';
+import { readFileSync } from 'fs';
+import { createSimpleSuccess } from '../util.js';
 
 const lang = JSON.parse(readFileSync('./lang.json'));
 const text = Object.keys(lang).map(key => `**${lang[key]}** - ${key}`).sort().reduce((prev, current) => prev + '\n' + current);
 
-module.exports.command = {
+export default {
 	data: new SlashCommandBuilder()
 		.setName('lang')
 		.setDescription('Displays all entrance language options'),

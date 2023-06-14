@@ -1,28 +1,30 @@
-const tts = require('google-tts-api');
-const { createAudioResource, demuxProbe } = require('@discordjs/voice');
-const { Readable } = require('stream');
-const { readFileSync } = require('fs');
+import tts from 'google-tts-api';
+import { createAudioResource, demuxProbe } from '@discordjs/voice';
+import { Readable } from 'stream';
+import { readFileSync } from 'fs';
 
 const lang = JSON.parse(readFileSync('./lang.json'));
 
-module.exports = {
-	create: options => {
-		const text = options.text;
-		const volume = options.volume;
-		const language = options.lang;
-		return new TextTrack(text, language, volume);
-	},
+export default {
+	create: create,
 	createFromCommand: options => {
 		const text = options.getString('text', true);
 		const volume = options.getNumber('volume');
 		const language = options.getString('lang');
-		return module.exports.create({
+		return create({
 			text: text,
 			volume: volume,
 			lang: language,
 		});
 	},
 };
+
+function create(options) {
+	const text = options.text;
+	const volume = options.volume;
+	const language = options.lang;
+	return new TextTrack(text, language, volume);
+}
 
 class TextTrack {
 

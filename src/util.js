@@ -1,15 +1,15 @@
-const { EmbedBuilder } = require('discord.js');
+import { EmbedBuilder } from 'discord.js';
 
-module.exports.createSimpleFailure = message => {
+export function createSimpleFailure(message) {
 	return {
 		embeds: [new EmbedBuilder().setDescription(message).setColor(0xFF0000)],
 		ephemeral: true,
 	};
-};
+}
 
-module.exports.createSimpleSuccess = message => {
+export function createSimpleSuccess(message) {
 	return {
 		embeds: [new EmbedBuilder().setDescription(message).setColor(0x00FF00)],
 		ephemeral: true,
 	};
-};
+}

@@ -1,8 +1,9 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
-const { createSimpleSuccess, createSimpleFailure } = require('../util.js');
-const { readFileSync, writeFileSync, existsSync } = require('fs');
+import { SlashCommandBuilder } from '@discordjs/builders';
+import { createSimpleSuccess, createSimpleFailure } from '../util.js';
+import { readFileSync, writeFileSync, existsSync } from 'fs';
+import tracks from '../audio/tracks.js';
 
-module.exports.command = {
+export default {
 	data: new SlashCommandBuilder()
 		.setName('entrance')
 		.setDescription('Sets entrance audio')
@@ -56,7 +57,7 @@ module.exports.command = {
 			return;
 		}
 		const subcommand = interaction.options.getSubcommand();
-		const exp = require(`../audio/tracks/${subcommand}.js`);
+		const exp = tracks[subcommand];
 		if(exp) {
 			const track = exp.createFromCommand(interaction.options);
 			if(!track) {

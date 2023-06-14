@@ -1,6 +1,6 @@
-const { createAudioResource } = require('@discordjs/voice');
-const { stream } = require('play-dl');
-const getYoutubeID = require('get-youtube-id');
+import { createAudioResource } from '@discordjs/voice';
+import { stream } from 'play-dl';
+import getYoutubeID from 'get-youtube-id';
 
 class YoutubeTrack {
 
@@ -29,15 +29,19 @@ class YoutubeTrack {
 
 }
 
-module.exports = {
-	create: options => new YoutubeTrack(options.id, options.volume),
+export default {
+	create: create,
 	createFromCommand: options => {
 		const id = getYoutubeID(options.getString('url', true));
 		if(id) {
-			return module.exports.create({
+			return create({
 				id: id,
 				volume: options.getNumber('volume'),
 			});
 		}
 	},
 };
+
+function create(options) {
+	return new YoutubeTrack(options.id, options.volume);
+}

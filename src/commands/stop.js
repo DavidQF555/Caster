@@ -1,8 +1,8 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
-const { schedulers } = require('../reference.js');
-const { createSimpleSuccess, createSimpleFailure } = require('../util.js');
+import { SlashCommandBuilder } from '@discordjs/builders';
+import { schedulers } from '../reference.js';
+import { createSimpleSuccess, createSimpleFailure } from '../util.js';
 
-module.exports.command = {
+export default {
 	data: new SlashCommandBuilder()
 		.setName('stop')
 		.setDescription('Stops whatever Caster is playing'),
