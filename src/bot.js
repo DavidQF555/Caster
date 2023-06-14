@@ -13,21 +13,33 @@ const client = new Client({ intents: [IntentsBitField.Flags.Guilds, IntentsBitFi
 const rest = new REST({ version: '9' }).setToken(process.env.TOKEN);
 
 const commands = new Collection();
-for (const command of baseCommands) {
-	commands.set(command.data.name, command);
-}
-try {
-	await rest.put(
-		Routes.applicationCommands(process.env.CLIENT_ID),
-		{ body: commands.map(command => command.data.toJSON()) },
-	);
-	console.log('Successfully registered application commands.');
-}
-catch (error) {
-	console.error(error);
+await registerCommands();
+
+client.on('interactionCreate', handleCommand);
+client.on('voiceStateUpdate', voiceStateUpdate);
+client.once('ready', () => {
+	console.log('Ready!');
+});
+
+client.login(process.env.TOKEN);
+
+async function registerCommands() {
+	for (const command of baseCommands) {
+		commands.set(command.data.name, command);
+	}
+	try {
+		await rest.put(
+			Routes.applicationCommands(process.env.CLIENT_ID),
+			{ body: commands.map(command => command.data.toJSON()) },
+		);
+		console.log('Successfully registered application commands.');
+	}
+	catch (error) {
+		console.error(error);
+	}
 }
 
-client.on('interactionCreate', async (interaction) => {
+async function handleCommand(interaction) {
 	if (!interaction.isCommand()) return;
 	const command = commands.get(interaction.commandName);
 	if (!command) return;
@@ -38,9 +50,9 @@ client.on('interactionCreate', async (interaction) => {
 		console.error(error);
 		await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
 	}
-});
+}
 
-client.on('voiceStateUpdate', async (oldState, newState) => {
+async function voiceStateUpdate(oldState, newState) {
 	if(newState.member.user.bot || !newState.channel || newState.channel == oldState.channel || !existsSync('./data.json')) return;
 	const storage = JSON.parse(readFileSync('./data.json'));
 	if(!storage[newState.channel.guild.id]) return;
@@ -76,10 +88,4 @@ client.on('voiceStateUpdate', async (oldState, newState) => {
 		}
 		await scheduler.start();
 	}
-});
-
-client.once('ready', () => {
-	console.log('Ready!');
-});
-
-client.login(process.env.TOKEN);
+}
