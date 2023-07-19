@@ -1,9 +1,7 @@
 import 'dotenv/config';
-import { REST } from '@discordjs/rest';
 import { joinVoiceChannel, entersState, VoiceConnectionStatus } from '@discordjs/voice';
-import { Client, Collection, IntentsBitField } from 'discord.js';
+import { REST, Routes, Client, Collection, IntentsBitField } from 'discord.js';
 import { readFileSync, existsSync } from 'fs';
-import { Routes } from 'discord-api-types/v9';
 import Scheduler from './audio/scheduler.js';
 import { schedulers } from './reference.js';
 import { createSimpleFailure } from './util.js';

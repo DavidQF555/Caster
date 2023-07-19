@@ -21,11 +21,7 @@
     },
     "homepage": "https://github.com/DavidQF555/Caster",
     "dependencies": {
-        "@discordjs/builders": "^1.6.3",
-        "@discordjs/opus": "^0.9.0",
-        "@discordjs/rest": "^1.7.1",
         "@discordjs/voice": "^0.16.0",
-        "discord-api-types": "^0.37.43",
         "discord.js": "^14.11.0",
         "dotenv": "^16.1.4",
         "ffmpeg-static": "^5.1.0",
@@ -35,7 +31,6 @@
         "play-dl": "^1.9.6"
     },
     "devDependencies": {
-        "eslint": "^8.42.0",
-        "npm-check-updates": "^16.10.12"
+        "eslint": "^8.42.0"
     }
 }

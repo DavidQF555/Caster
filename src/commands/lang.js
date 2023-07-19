@@ -1,4 +1,4 @@
-import { SlashCommandBuilder } from '@discordjs/builders';
+import { SlashCommandBuilder } from 'discord.js';
 import { readFileSync } from 'fs';
 import { createSimpleSuccess } from '../util.js';
 

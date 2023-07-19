@@ -1,4 +1,4 @@
-import { SlashCommandBuilder } from '@discordjs/builders';
+import { SlashCommandBuilder } from 'discord.js';
 import { createSimpleSuccess, createSimpleFailure } from '../util.js';
 import { readFileSync, writeFileSync, existsSync } from 'fs';
 import tracks from '../audio/tracks.js';

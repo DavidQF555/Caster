@@ -1,4 +1,4 @@
-import { SlashCommandBuilder } from '@discordjs/builders';
+import { SlashCommandBuilder } from 'discord.js';
 import { schedulers } from '../reference.js';
 import { createSimpleSuccess, createSimpleFailure } from '../util.js';
 
