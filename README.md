@@ -31,3 +31,4 @@ If Node.js and npm are already installed, skip this step. If not, follow these [
 | entrance | Sets the entrance speech for a user |
 | lang | Displays all language options for entrance |
 | stop | Stops whatever Caster is playing |
+| bug | Bugs target with TTS message |
