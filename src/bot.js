@@ -62,18 +62,12 @@ async function voiceStateUpdate(oldState, newState) {
 	if(!storage[newState.channel.guild.id]) return;
 	const entrance = storage[newState.channel.guild.id][newState.id];
 	if(!entrance) return;
-	const old = schedulers[newState.guild.id];
-	if(old) {
-		old.end();
-	}
-	const connection = joinVoiceChannel({
-		channelId: newState.channelId,
-		guildId: newState.channel.guild.id,
-		adapterCreator: newState.channel.guild.voiceAdapterCreator,
-	});
-	connection.on('error', console.warn);
 	const type = tracks[entrance.type];
 	if(type) {
+		const old = schedulers[newState.guild.id];
+		if(old) {
+			old.end();
+		}
 		const track = type.create(entrance);
 		const scheduler = new Scheduler(newState.channel.guild.id,
 			joinVoiceChannel({
@@ -84,7 +78,7 @@ async function voiceStateUpdate(oldState, newState) {
 		);
 		schedulers[newState.guild.id] = scheduler;
 		try {
-			await entersState(connection, VoiceConnectionStatus.Ready, 20e3);
+			await entersState(scheduler.connection, VoiceConnectionStatus.Ready, 20e3);
 		}
 		catch (error) {
 			console.warn(error);
