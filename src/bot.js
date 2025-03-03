@@ -9,7 +9,7 @@ import baseCommands from './commands.js';
 import tracks from './audio/tracks.js';
 
 const client = new Client({ intents: [IntentsBitField.Flags.Guilds, IntentsBitField.Flags.GuildVoiceStates] });
-const rest = new REST({ version: '9' }).setToken(process.env.TOKEN);
+const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
 
 const commands = new Collection();
 await registerCommands();

@@ -1,5 +1,5 @@
-import { createAudioResource } from '@discordjs/voice';
-import { stream } from 'play-dl';
+import { createAudioResource, demuxProbe } from '@discordjs/voice';
+import ytdl from '@distube/ytdl-core';
 import getYoutubeID from 'get-youtube-id';
 
 class YoutubeTrack {
@@ -9,11 +9,16 @@ class YoutubeTrack {
 		this.volume = volume || 1;
 	}
 
-	async createAudioResource() {
-		const out = await stream(`https://www.youtu.be/${this.id}`, { discordPlayerCompatibility: true });
-		const resource = createAudioResource(out.stream, { metadata: this, inputType: out.type, inlineVolume: true });
-		resource.volume.setVolume(this.volume);
-		return resource;
+	createAudioResource() {
+		return new Promise((resolve, reject) => {
+			demuxProbe(ytdl(`https://www.youtube.com/watch?v=${this.id}`, { filter: 'audio' }))
+				.then(probe => {
+					const resource = createAudioResource(probe.stream, { metadata: this, inputType: probe.type, inlineVolume: true });
+					resource.volume.setVolume(this.volume);
+					resolve(resource);
+				})
+				.catch(reject);
+		});
 	}
 
 	getName() {
