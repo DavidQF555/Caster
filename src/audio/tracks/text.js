@@ -1,4 +1,4 @@
-import tts from 'google-tts-api';
+import tts from '@sefinek/google-tts-api';
 import { createAudioResource, demuxProbe } from '@discordjs/voice';
 import { Readable } from 'stream';
 import { readFileSync } from 'fs';
